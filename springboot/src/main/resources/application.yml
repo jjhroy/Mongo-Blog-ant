@@ -1,0 +1,100 @@
+# 配置端口
+server:
+  port: 8080
+  servlet:
+    session:
+      timeout: 21600
+
+# 配置mysql数据库
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://服务器或本地ip:3306/blog?serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    username: root
+    password: 你的mysql密码
+    hikari:
+      minimum-idle: 5
+      # 空闲连接存活最大时间，默认600000（10分钟）
+      idle-timeout: 180000
+      # 连接池最大连接数，默认是10
+      maximum-pool-size: 10
+      # 此属性控制从池返回的连接的默认自动提交行为,默认值：true
+      auto-commit: true
+      # 连接池名称
+      pool-name: MyHikariCP
+      # 此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认1800000即30分钟
+      max-lifetime: 1800000
+      # 数据库连接超时时间,默认30秒，即30000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+  # redis配置
+  redis:
+    host: 服务器或本地ip
+    port: 6379
+    password: redis密码
+  # mq配置
+  rabbitmq:
+    host: 服务器或本地ip
+    port: 5672
+    username: guest
+    password: guest
+    listener:
+      simple:
+        retry:
+          enabled: true
+          max-attempts: 3 #最大重试次数
+          initial-interval: 3000 #重试间隔时间（单位毫秒）
+  # 邮箱配置
+  mail:
+    host: smtp.qq.com
+    username: 你的qq邮箱
+    password: 申请的密码
+    default-encoding: UTF-8
+    port: 587
+    properties:
+      mail:
+      smtp:
+      auth: true
+      socketFactory:
+      class: javax.net.ssl.SSLSocketFactory
+  # 上传图片大小限制
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size:  100MB
+
+# 配置MybatisPlus
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+
+# 搜索模式
+search:
+  mode: mysql
+# 上传模式
+upload:
+  mode: local
+  local:
+    # nginx映射本地文件路径，无域名则为 ip:83
+    url: https://上传子域名
+    # 本地文件存储路径
+    path: /usr/local/blog/upload/
+
+# 网站前台域名（邮件通知用）
+website:
+  url: https://你的域名
+
+#第三方配置信息
+qq:
+  app-id: 申请的QQ的app-id
+  check-token-url: https://graph.qq.com/oauth2.0/me?access_token={access_token}
+  user-info-url: https://graph.qq.com/user/get_user_info?openid={openid}&access_token={access_token}&oauth_consumer_key={oauth_consumer_key}
+
+wx:
+  appid: 申请的微信的app-id
+  secret: 申请微信的的秘钥
+  grantType: authorization_code
+

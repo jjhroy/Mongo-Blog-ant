@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--https 配置-->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+    <!-- 动态引入验证码JS示例 -->
+    <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+    <!--qq授权登录-->
+    <script
+      type="text/javascript"
+      src="http://connect.qq.com/qc_jssdk.js"
+      data-appid="101983688"
+      data-callback="true"
+      data-redirecturi="https://www.asukasuna.xyz/oauth/login/qq"
+      charset="utf-8"
+    ></script>
+    <title>BLOG</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

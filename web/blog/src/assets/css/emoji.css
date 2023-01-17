@@ -1,0 +1,156 @@
+@charset "UTF-8";
+
+p {
+    margin: 0
+}
+
+/* 设置滚动条的样式 */
+::-webkit-scrollbar {
+    /* width: 50px;
+      height: 20px; */
+    width: 8px;
+    height: 8px;
+}
+
+/* 滚动槽 */
+::-webkit-scrollbar-track {
+    background-color: rgba(73, 177, 245, 0.2);
+    border-radius: 2em;
+}
+
+/* 滚动条滑块 */
+::-webkit-scrollbar-thumb {
+    background-color: #49b1f5;
+    background-image: -webkit-linear-gradient(45deg,
+            rgba(255, 255, 255, 0.4) 25%,
+            transparent 25%,
+            transparent 50%,
+            rgba(255, 255, 255, 0.4) 50%,
+            rgba(255, 255, 255, 0.4) 75%,
+            transparent 75%,
+            transparent);
+    /* background: url("https://img-static.mihoyo.com/communityweb/upload/0c6568970d334cfe082cf7b6dca8fbfb.png") no-repeat;
+      background-size:50px 50px; */
+    border-radius: 2em;
+}
+
+::-webkit-scrollbar-corner {
+    background-color: transparent;
+}
+
+.pollup {
+    width: var(--V3Emoji-width);
+    height: var(--V3Emoji-height);
+    position: absolute;
+    right: 0;
+    bottom: 50px;
+    z-index: 5;
+    transition: all ease .5s;
+    color: var(--V3Emoji-fontColor);
+    background-color: var(--V3Emoji-backgroundColor);
+    box-shadow: 3px 3px 10px var(--V3Emoji-shadowColor);
+    border-radius: 15px;
+    overflow: hidden
+}
+
+.pollup .tab-name {
+    font-size: var(--V3Emoji-fontSize);
+    height: var(--V3Emoji-itemSize);
+    margin: 5px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center
+}
+
+.pollup .tab-name .delete-recent {
+    color: #31beff;
+    cursor: pointer
+}
+
+.pollup .emoji-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, calc(var(--V3Emoji-itemSize) + 20px));
+    justify-content: space-between;
+    align-items: center;
+    max-height: calc(var(--V3Emoji-height) - var(--V3Emoji-itemSize) * 2 - 20px - 10px);
+    overflow-y: auto
+}
+
+.pollup .emoji-container-item {
+    padding: 10px;
+    font-size: var(--V3Emoji-fontSize);
+    line-height: var(--V3Emoji-itemSize);
+    text-align: center;
+    cursor: pointer
+}
+
+.pollup .emoji-container-item:hover {
+    background-color: var(--V3Emoji-hoverColor)
+}
+
+.pollup .tab-container {
+    position: absolute;
+    width: 100%;
+    height: calc(var(--V3Emoji-itemsize) + 20px);
+    overflow: auto;
+    bottom: 0;
+    display: flex;
+    background-color: var(--V3Emoji-backgroundColor);
+    box-shadow: 3px 3px 10px var(--V3Emoji-shadowColor)
+}
+
+.pollup .tab-container .tab-item {
+    padding: 10px;
+    font-size: var(--V3Emoji-fontSize);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer
+}
+
+.pollup .tab-container .tab-item.active {
+    background-color: var(--V3Emoji-activeColor)
+}
+
+.emoji-container {
+    position: relative;
+    display: inline-flex
+}
+
+.emoji-container-open-btn {
+    font-size: 20px;
+    cursor: pointer
+}
+
+.emoji-item {
+    width: 100%;
+    height: 100%
+}
+
+.emoji-textarea {
+    position: relative;
+    width: 100%;
+    height: 100%
+}
+
+.emoji-textarea textarea {
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    font-size: 16px;
+    box-shadow: 3px 3px 5px #0003
+}
+
+.emoji-textarea .emoji-textarea-pollup-container {
+    font-size: 20px;
+    position: absolute;
+    bottom: 12px;
+    right: 5px;
+    z-index: 2
+}
+
+.emoji-textarea .emoji-textarea-pollup-container .emoji-textarea-open-btn {
+    cursor: pointer
+}

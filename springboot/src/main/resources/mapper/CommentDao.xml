@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jjhroy.blog.dao.CommentDao">
+
+    <select id="listComments" resultType="com.jjhroy.blog.dto.CommentDTO">
+        SELECT
+        u.nickname,
+        u.avatar,
+        u.web_site,
+        c.user_id,
+        c.id,
+        c.ip_address,
+        c.ip_source,
+        c.comment_content,
+        c.create_time
+        FROM
+        tb_comment c
+        JOIN tb_user_info u ON c.user_id = u.id
+        <where>
+            <if test="commentVO.topicId != null">
+                topic_id = #{commentVO.topicId}
+            </if>
+            AND type = #{commentVO.type}
+            AND c.is_review = 1
+            AND parent_id IS NULL
+        </where>
+        ORDER BY
+        c.id DESC
+        LIMIT #{current},#{size}
+    </select>
+
+    <select id="listReplies" resultType="com.jjhroy.blog.dto.ReplyDTO">
+        SELECT
+        *
+        FROM
+        (
+         SELECT
+         c.user_id,
+         u.nickname,
+         u.avatar,
+         u.web_site,
+         c.reply_user_id,
+         r.nickname AS reply_nickname,
+         r.web_site AS reply_web_site,
+         c.id,
+         c.parent_id,
+         c.comment_content,
+         c.create_time,
+         row_number () over ( PARTITION BY parent_id ORDER BY create_time ASC ) row_num
+         FROM
+         tb_comment c
+         JOIN tb_user_info u ON c.user_id = u.id
+         JOIN tb_user_info r ON c.reply_user_id = r.id
+         WHERE
+         c.is_review = 1
+         AND
+         parent_id IN
+         (
+         <foreach collection="commentIdList" item="commentId" separator=",">
+             #{commentId}
+         </foreach>
+         )
+        ) t
+        WHERE
+        4 > row_num
+    </select>
+
+    <select id="listReplyCountByCommentId" resultType="com.jjhroy.blog.dto.ReplyCountDTO">
+        SELECT
+        parent_id as comment_id,
+        count(1) AS reply_count
+        FROM
+        tb_comment
+        WHERE
+        is_review = 1
+        AND
+        parent_id IN
+        <foreach open="(" collection="commentIdList" item="commentId" separator="," close=")">
+            #{commentId}
+        </foreach>
+        GROUP BY
+        parent_id
+    </select>
+
+    <select id="listRepliesByCommentId" resultType="com.jjhroy.blog.dto.ReplyDTO">
+        SELECT
+        c.user_id,
+        u.nickname,
+        u.avatar,
+        u.web_site,
+        c.reply_user_id,
+        r.nickname as reply_nickname,
+        r.web_site as reply_web_site,
+        c.id,
+        c.parent_id,
+        c.comment_content,
+        c.create_time
+        FROM
+        tb_comment c
+        JOIN tb_user_info u ON c.user_id = u.id
+        JOIN tb_user_info r ON c.reply_user_id = r.id
+        WHERE
+        c.is_review = 1
+        AND
+        parent_id =#{commentId}
+        ORDER BY
+          c.id ASC
+        LIMIT #{current}, #{size}
+    </select>
+
+    <select id="listCommentBackDTO" resultType="com.jjhroy.blog.dto.CommentBackDTO">
+        SELECT
+         c.id,
+         u.avatar,
+         u.nickname,
+         r.nickname AS reply_nickname,
+         a.article_title,
+         c.comment_content,
+         c.type,
+         c.create_time,
+         c.is_review
+        FROM
+         tb_comment c
+         LEFT JOIN tb_article a ON c.topic_id = a.id
+         LEFT JOIN tb_user_info u ON c.user_id = u.id
+         LEFT JOIN tb_user_info r ON c.reply_user_id = r.id
+       <where>
+           <if test="condition.type != null">
+               c.type = #{condition.type}
+           </if>
+           <if test="condition.isReview != null">
+              and c.is_review = #{condition.isReview}
+           </if>
+            <if test="condition.keywords != null">
+              and u.nickname like concat('%',#{condition.keywords},'%')
+            </if>
+        </where>
+        ORDER BY
+          id DESC
+        LIMIT #{current},#{size}
+    </select>
+
+    <select id="countCommentDTO" resultType="java.lang.Integer">
+        SELECT
+        count(1)
+        from
+        tb_comment c
+        LEFT JOIN tb_user_info u ON c.user_id = u.id
+        <where>
+            <if test="condition.type != null">
+                c.type = #{condition.type}
+            </if>
+            <if test="condition.isReview != null">
+                and c.is_review = #{condition.isReview}
+            </if>
+            <if test="condition.keywords != null">
+                and u.nickname like concat('%',#{condition.keywords},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="listCommentCountByTopicIds" resultType="com.jjhroy.blog.dto.CommentCountDTO">
+        SELECT
+          topic_id as id,
+          COUNT( 1 ) AS comment_count
+        FROM
+          tb_comment
+        WHERE
+          topic_id IN
+          <foreach open="(" collection="topicIdList" item="topicId" separator="," close=")">
+            #{topicId}
+          </foreach>
+        AND
+          parent_id IS NULL
+        GROUP BY
+        topic_id
+    </select>
+
+</mapper>
